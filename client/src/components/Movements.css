@@ -150,3 +150,9 @@ ul li:last-child {
 .exit:hover {
   background-color: #f1f1f1;
 }
+
+.errors {
+  color: rgb(204, 85, 0);
+  padding-left: 12px;
+  font-weight: bold;
+}

@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import './stylesLogin.css';
-export default function Login({ setIsLogin }) {
+export default function Login_register({ setIsLogin }) {
     const [user, setUser] = useState({ email: '', password: '' })
     const [err, setErr] = useState('')
     const [userRegister, setUserRegister] = useState({ email: '', password: '' })
     const [errRegister, setErrRegister] = useState('')
     const [onLogin, setOnLogin] = useState(false)
 
-    const URIbase = `http://app-presupuesto-mern.herokuapp.com`
     const onChangeInput = e => {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value })
@@ -24,13 +23,12 @@ export default function Login({ setIsLogin }) {
     const registerSubmit = async e => {
         e.preventDefault()
         try {
-            const res = await axios.post(`${URIbase}/api/auth/register`, {
+            const res = await axios.post(`/api/auth/register`, {
                 email: userRegister.email,
                 password: userRegister.password
             })
             setUserRegister({ email: '', password: '' })
             setErrRegister(res.data.message || res.data.msg)
-            console.log(errRegister)
         } catch (err) {
 
             if (
@@ -48,7 +46,7 @@ export default function Login({ setIsLogin }) {
     const loginSubmit = async e => {
         e.preventDefault()
         try {
-            const res = await axios.post(`${URIbase}/api/auth/login`, {
+            const res = await axios.post(`/api/auth/login`, {
                 email: user.email,
                 password: user.password
             })

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import Login from './components/Login'
+import Login_register from './components/Login_register'
 import Movements from './components/Movements'
 
 
@@ -28,7 +28,7 @@ function App() {
       {
         isLogin
           ? <Movements setIsLogin={setIsLogin} />
-          : <Login setIsLogin={setIsLogin} />
+          : <Login_register setIsLogin={setIsLogin} />
       }
     </div>
   );

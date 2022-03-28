@@ -4,18 +4,17 @@ import './Movements.css';
 import { useState, useEffect } from 'react';
 
 export default function Movements() {
-    // states
-    const [movements, setMovements] = useState([])
-    const [token, setToken] = useState('')
-    const [newMovement, setnewMovement] = useState({
+    const initialStateNewMovement = {
         concept: "",
         amount: "",
         date: ""
-    })
+    }
+    // states
+    const [movements, setMovements] = useState([])
+    const [token, setToken] = useState('')
+    const [newMovement, setnewMovement] = useState(initialStateNewMovement, [])
     const [total, setTotal] = useState(0)
-
-
-    const URIbase = `http://app-presupuesto-mern.herokuapp.com`
+    const [errInput, setErrInput] = useState([])
     // auth token
     useEffect(() => {
         setToken(localStorage.getItem('tokenStore'))
@@ -33,6 +32,7 @@ export default function Movements() {
             setTotal(total)
         } else {
             setTotal(0)
+
         }
     }, [movements])
 
@@ -40,7 +40,7 @@ export default function Movements() {
     // get all transactions
     const getTransactions = async (token) => {
         try {
-            const res = await axios.get(`${URIbase}/api/movements`, {
+            const res = await axios.get(`/api/movements`, {
                 headers: { Authorization: token }
             })
             setMovements(res.data.data)
@@ -54,7 +54,7 @@ export default function Movements() {
     const deleteMovement = async (id) => {
         try {
             if (token) {
-                await axios.delete(`${URIbase}/api/movements`, {
+                await axios.delete(`/api/movements`, {
                     headers: { Authorization: token },
                     data: { id: id }
                 })
@@ -72,13 +72,25 @@ export default function Movements() {
             e.preventDefault()
             const token = localStorage.getItem('tokenStore')
             if (token) {
-                await axios.post(`${URIbase}/api/movements`, newMovement, {
+                await axios.post('/api/movements', newMovement, {
                     headers: { Authorization: token }
                 })
                 setMovements([...movements, newMovement])
+                setnewMovement(initialStateNewMovement)
+                setErrInput([])
+                // reset form
+                e.target.reset()
             }
-        } catch (error) {
+        } catch (err) {
+            if (
+                err.response &&
+                err.response.status >= 400 &&
+                err.response.status <= 500
 
+            ) {
+                setErrInput(err.response.data.errors)
+
+            }
         }
     }
 
@@ -130,10 +142,13 @@ export default function Movements() {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <button className="addTransaction">+ Add Transaction</button>
+                        <button className="addTransaction">+ Add Movement</button>
                     </form>
                 </div>
             </div>
+            <ul className='errors'>
+                {errInput?.map((err, i) => <li key={i}>{err.msg}</li>)}
+            </ul>
             {/* last transactions */}
             <div className="latestTransactions">
                 <p>Latest Transactions</p>
