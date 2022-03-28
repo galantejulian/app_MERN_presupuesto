@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require('../models/User');
-const Movements = require("../models/Movement");
 const jwt = require('jsonwebtoken');
-
+const Movements = require('../models/Movement');
 module.exports = {
     register: async (req, res) => {
         try {

@@ -9,6 +9,9 @@ const authRoutes = require("./src/routes/auth")
 const app = express()
 const port = process.env.PORT || 9000;
 const cors = require("cors")
+const URI = process.env.MONGODB_URI
+    ? process.env.MONGODB_URI
+    : "mongodb:localhost/databasetest"
 
 
 // middlewares
@@ -21,9 +24,14 @@ app.use(cors())
 app.use('/api/movements', movementsRoutes)
 app.use('/api/auth', authRoutes)
 
-
 // connect to mongodb
-mongoose.connect("mongodb+srv://juliangalante:18081990@app-presupuesto-mern.xpv9w.mongodb.net/db_presupuesto?retryWrites=true&w=majority")
+mongoose.connect(URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, err => {
+    if (err) throw err;
+    console.log('Connected to MongoDB')
+})
 
 
 app.listen(process.env.PORT || 3001, () => {

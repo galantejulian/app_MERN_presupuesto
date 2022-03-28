@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose')
 
 const movementSchema = new Schema({
-    concept: String,
+    concept: {
+        type: String,
+    },
     amount: {
         type: Number,
-        required: [true, 'please add a positive or negative number']
     },
     date: {
         type: String,
